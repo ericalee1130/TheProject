@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="product"> <!-- mapper파일의 이름 -->
+	<select id="selectList" resultType="product.ProductVo" parameterType="product.ProductVo">
+		SELECT * FROM fulltable 
+			<if test="primary_category != null">
+			<choose>
+				<when test="primary_category == 'Mixed Media Art '">WHERE primary_category = 'Mixed Media Art &amp; Collage Art'</when>
+				<when test="primary_category == 'Art Sculptures'">WHERE primary_category = 'Art Sculptures'</when>
+				<when test="primary_category == 'Birds'">WHERE primary_category = 'Birds'</when>
+				<when test="primary_category == 'Posters &amp; Prints'">WHERE primary_category = 'Posters &amp; Prints'</when>
+				<when test="primary_category == 'Textile Art &amp; Fiber Art'">WHERE primary_category = 'Textile Art &amp; Fiber Art'</when>
+				<when test="primary_category == 'Other Art'">WHERE primary_category = 'Other Art'</when>
+				<when test="primary_category == 'Art Drawings'">WHERE primary_category = 'Art Drawings'</when>
+				<when test="primary_category == 'Art Photographs'">WHERE primary_category = 'Art Photographs'</when>
+				<when test="primary_category == 'Other Pottery &amp; Glass'">WHERE primary_category = 'Other Pottery &amp; Glass'</when>
+				<when test="primary_category == 'Frames'">WHERE primary_category = 'Frames'</when>
+				<when test="primary_category == 'Empire (up to 1948)'">WHERE primary_category = 'Empire (up to 1948)'</when>
+				<when test="primary_category == 'Rugs &amp; Carpets'">WHERE primary_category = 'Rugs &amp; Carpets'</when>
+				<when test="primary_category == 'Antiquarian &amp; Collectible'">WHERE primary_category = 'Antiquarian &amp; Collectible'</when>
+				<when test="primary_category == 'Art Prints'">WHERE primary_category = 'Art Prints'</when>
+			</choose>
+			</if>
+					<if test="s_site != null">
+					<choose>
+						<when test="s_site == 'all'"></when>
+						<when test="s_site == 'jp'">WHERE country = 'JP'</when>
+						<when test="s_site == 'us'">WHERE country = 'US'</when>
+						<when test="s_site == 'ca'">WHERE country = 'CA'</when>
+						<when test="s_site == 'uk'">WHERE country = 'UK'</when>
+					</choose>
+					</if>
+					<if test="searchword != null">
+					<choose>
+						<when test="s_site == 'all'">WHERE</when>
+						<when test="s_site != 'all' &amp;&amp; s_site != null"></when>
+					</choose>
+					<choose>
+						<when test="s_type == 'title'">title LIKE '%${searchword}%'</when>
+						<when test="s_type == 'itemid'">itemid = '${searchword}'</when>
+					</choose>
+					</if>
+					
+		<if test="orderCond != null">
+		<choose>
+			<when test="orderCond == 'watchcount_desc'">ORDER BY watchcount DESC</when>
+			<when test="orderCond == 'endtime_asc'">ORDER BY endtime ASC</when>
+			<when test="orderCond == 'price_asc'">ORDER BY price ASC</when>
+			<when test="orderCond == 'price_desc'">ORDER BY price DESC</when>
+			<when test="orderCond == 'start_time_desc'">ORDER BY starttime DESC</when>
+		</choose>
+		</if>
+		<choose>
+			<when test="page_boolean == 0">LIMIT ${startIdx},20</when>
+			<otherwise></otherwise>
+		</choose>
+	</select>
+	<select id="selectPrimaryCategory" resultType="String">
+		SELECT DISTINCT primary_category FROM fulltable
+	</select>
+	
+	<select id="selectSecondaryCategory" resultType="List" parameterType="String">
+		SELECT DISTINCT secondary_category FROM fulltable WHERE primary_category = #{xxx}
+	</select>
+	 
+	<select id="count" resultType="int" parameterType="product.ProductVo">
+		SELECT COUNT(*) FROM fulltable
+		<if test="primary_category != null">
+			<choose>
+				<when test="primary_category == 'Mixed Media Art '">WHERE primary_category = 'Mixed Media Art &amp; Collage Art'</when>
+				<when test="primary_category == 'Art Sculptures'">WHERE primary_category = 'Art Sculptures'</when>
+				<when test="primary_category == 'Birds'">WHERE primary_category = 'Birds'</when>
+				<when test="primary_category == 'Posters &amp; Prints'">WHERE primary_category = 'Posters &amp; Prints'</when>
+				<when test="primary_category == 'Textile Art &amp; Fiber Art'">WHERE primary_category = 'Textile Art &amp; Fiber Art'</when>
+				<when test="primary_category == 'Other Art'">WHERE primary_category = 'Other Art'</when>
+				<when test="primary_category == 'Art Drawings'">WHERE primary_category = 'Art Drawings'</when>
+				<when test="primary_category == 'Art Photographs'">WHERE primary_category = 'Art Photographs'</when>
+				<when test="primary_category == 'Other Pottery &amp; Glass'">WHERE primary_category = 'Other Pottery &amp; Glass'</when>
+				<when test="primary_category == 'Frames'">WHERE primary_category = 'Frames'</when>
+				<when test="primary_category == 'Empire (up to 1948)'">WHERE primary_category = 'Empire (up to 1948)'</when>
+				<when test="primary_category == 'Rugs &amp; Carpets'">WHERE primary_category = 'Rugs &amp; Carpets'</when>
+				<when test="primary_category == 'Antiquarian &amp; Collectible'">WHERE primary_category = 'Antiquarian &amp; Collectible'</when>
+				<when test="primary_category == 'Art Prints'">WHERE primary_category = 'Art Prints'</when>
+			</choose>
+			</if>
+					<if test="s_site != null">
+					<choose>
+						<when test="s_site == 'all'"></when>
+						<when test="s_site == 'jp'">WHERE country = 'JP'</when>
+						<when test="s_site == 'us'">WHERE country = 'US'</when>
+						<when test="s_site == 'ca'">WHERE country = 'CA'</when>
+						<when test="s_site == 'uk'">WHERE country = 'UK'</when>
+					</choose>
+					</if>
+					<if test="searchword != null">
+					<choose>
+						<when test="s_site == 'all'">WHERE</when>
+						<when test="s_site != 'all' &amp;&amp; s_site != null"></when>
+					</choose>
+					<choose>
+						<when test="s_type == 'title'">title LIKE '%${searchword}%'</when>
+						<when test="s_type == 'itemid'">itemid = '${searchword}'</when>
+					</choose>
+					</if>
+					<if test="orderCond != null">
+		<choose>
+			<when test="orderCond == 'watchcount_desc'">ORDER BY watchcount DESC</when>
+			<when test="orderCond == 'endtime_asc'">ORDER BY endtime ASC</when>
+			<when test="orderCond == 'price_asc'">ORDER BY price ASC</when>
+			<when test="orderCond == 'price_desc'">ORDER BY price DESC</when>
+			<when test="orderCond == 'start_time_desc'">ORDER BY starttime DESC</when>
+		</choose>
+		</if>
+		<choose>
+			<when test="page_boolean == 0">LIMIT ${startIdx},20</when>
+			<otherwise></otherwise>
+		</choose>
+	</select>
+
+	<select id="selectOne" parameterType="String" resultType="product.ProductVo">
+		SELECT * FROM fulltable WHERE itemid = #{xxx}		
+	</select>
+	
+	<delete id="delete" parameterType="String">
+		DELETE FROM fulltable WHERE itemid = #{xxx} 
+	</delete>
+	<select id="selectAll" resultType="product.ProductVo" parameterType="product.ProductVo">
+		SELECT * FROM fulltable
+	</select>
+</mapper>
